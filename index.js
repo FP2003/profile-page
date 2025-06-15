@@ -105,16 +105,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 10);
     }
 
-    // Mute button functionality
-    const muteButton = document.querySelector('.mute-button');
     const video = document.querySelector('.video-background');
-    
-    muteButton.addEventListener('click', () => {
-        video.muted = !video.muted;
-        muteButton.innerHTML = video.muted ? 
-            '<svg class="mute-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M5.889 16H2a1 1 0 01-1-1V9a1 1 0 011-1h3.889l5.294-4.332a.5.5 0 01.817.387v15.89a.5.5 0 01-.817.387L5.89 16zm14.525-4l3.536 3.536-1.414 1.414L19 13.414l-3.536 3.536-1.414-1.414L17.586 12 14.05 8.464l1.414-1.414L19 10.586l3.536-3.536 1.414 1.414L20.414 12z"></path></svg>' : 
-            '<svg class="mute-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M5.889 16H2a1 1 0 01-1-1V9a1 1 0 011-1h3.889l5.294-4.332a.5.5 0 01.817.387v15.89a.5.5 0 01-.817.387L5.89 16zm15.295-4.857l-4.6 4.6a.5.5 0 000 .707l.707.707a.5.5 0 00.707 0l4.6-4.6a.5.5 0 000-.707l-.707-.707a.5.5 0 00-.707 0z"></path><path d="M15.38 9.593c-.389.389-.389 1.025 0 1.414l1.414 1.414c.389.389 1.025.389 1.414 0 .389-.389.389-1.025 0-1.414l-1.414-1.414c-.389-.389-1.025-.389-1.414 0z"></path></svg>';
-    });        
+    const volumeSlider = document.getElementById('volumeRange');
+
+    // Start video muted so autoplay works
+    video.volume = parseFloat(volumeSlider.value);
+
+    // When user interacts, unmute video
+    function enableAudio() {
+    video.muted = false;
+    video.volume = parseFloat(volumeSlider.value); // ensure slider sets it
+    document.removeEventListener('click', enableAudio);
+    document.removeEventListener('keydown', enableAudio);
+    }
+
+    // Listen for user interaction to enable audio
+    document.addEventListener('click', enableAudio);
+    document.addEventListener('keydown', enableAudio);
+
+    // Slider input changes volume
+    volumeSlider.addEventListener('input', () => {
+    video.volume = parseFloat(volumeSlider.value);
+    });
 
     // Add hover effect to profile card
     profileCard.addEventListener('mouseenter', () => {
